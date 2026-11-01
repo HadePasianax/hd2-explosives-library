@@ -24,21 +24,18 @@ Install this when another mod lists **Explosives Library** as a requirement. The
 
 Keep only one copy of the library enabled. The supplied example waits for the library to become ready, so it does not require a particular position in the mod list. Other consuming mods must also handle readiness correctly.
 
-### For mod authors
+### For developers
 
-The download includes a public C header, source code, developer documentation, an API reference, and a standalone consumer example.
+Source code, documentation, and examples are available in the [Explosives Library GitHub repository](https://github.com/HadePasianax/hd2-explosives-library).
 
-The current API supports:
+- [Author guide](https://github.com/HadePasianax/hd2-explosives-library/blob/main/docs/AUTHOR-GUIDE.md) — integrate the library into your mod.
+- [API reference](https://github.com/HadePasianax/hd2-explosives-library/blob/main/docs/API.md) — registration, settings, and API requirements.
+- [Public C header](https://github.com/HadePasianax/hd2-explosives-library/blob/main/include/explosives_library.h) — include this in your consumer mod.
+- [Examples](https://github.com/HadePasianax/hd2-explosives-library/tree/main/examples) — includes the orbital strike debug consumer. The author guide also links a standalone Crossbow example.
 
-- Private explosion definitions cloned from native donors.
-- Independent private damage links and optional blast-radius overrides.
-- Optional shrapnel-count overrides for suitable donors.
-- A shared registry with 64 explosion slots across compatible mods.
-- Namespaced registration keys and duplicate-definition checks.
+The library supplies a shared private explosion registry; damage types use HellForge's existing private damage API. Use the shared provider rather than copying its engine patches into each mod.
 
-Use HellForge's private damage rows to set standard and durable damage, armor penetration, demolition, stagger, push, and supported existing status fields. The library handles the engine-side explosion registry; consumers should use its API rather than bundle their own table patches.
-
-Start with `README.md`, then `docs/AUTHOR-GUIDE.md` and `docs/API.md` in the ZIP. The public header is `include/explosives_library.h`.
+Use a [versioned release](https://github.com/HadePasianax/hd2-explosives-library/releases) for downloads, and read the documentation at the matching release tag when targeting an older version. The links above follow the current `main` branch. Report bugs through [GitHub Issues](https://github.com/HadePasianax/hd2-explosives-library/issues).
 
 ### Compatibility and current status
 
