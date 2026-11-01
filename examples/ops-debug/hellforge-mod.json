@@ -1,0 +1,13 @@
+{
+  "format": 1,
+  "id": "hade.explosives-library-ops-debug",
+  "name": "Explosives Library - OPS Debug",
+  "version": "0.1.0",
+  "description": "TEMPORARY: replaces vanilla OPS shells with library plasma blasts: 800/800 AP5, 6/8/10m radii, zero direct-hit damage. Requires Explosives Library 0.1.0. Disable other OPS edits and the old lab.",
+  "icon": "icon.png",
+  "gameplay": true,
+  "code": {
+    "dll": "explosives_library_ops_debug.dll",
+    "sdk": 15
+  }
+}

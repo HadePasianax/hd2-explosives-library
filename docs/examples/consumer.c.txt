@@ -1,0 +1,140 @@
+/* Standalone example: save as src/example.c in your OWN SDK-15 test mod.
+ * Copy include/explosives_library.h beside it. Enable one library provider.
+ * This overwrites the vanilla Crossbow feed. Do not ship it inside the provider.
+ * Full restart required; disable competing Crossbow edits for the test.
+ */
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <stdint.h>
+#include <string.h>
+#include "hellforge_mod.h"
+#include "explosives_library.h"
+
+static uint32_t bolt, directDamage, blastDamage, explosion;
+static int rowsReady, configured, applied, stopped, missingLogged;
+static float retry;
+
+static int ConfigureDamage(const HfApi* hf)
+{
+    HfDamageInfo* direct = (HfDamageInfo*)hf->damage_row(directDamage);
+    HfDamageInfo* blast = (HfDamageInfo*)hf->damage_row(blastDamage);
+    if (!direct || direct->id != directDamage || !blast || blast->id != blastDamage) return 0;
+    direct->standard_damage = 125;
+    direct->durable_damage = 50;
+    blast->standard_damage = 300;
+    blast->durable_damage = 300;
+    for (unsigned i = 0; i < 4; i++) blast->armor_penetration[i] = 3;
+    blast->demolition = 20;
+    blast->stagger = 35;
+    blast->push_force = 30;
+    return 1;
+}
+
+static int Connect(HfMod* mod)
+{
+    const HfApi* hf = HF_API(mod);
+    uint32_t stride = 0;
+    uintptr_t gunAt = hf->component_record("ProjectileWeaponComponentData", HF_ENTITY_CB9_EXPLODING_CROSSBOW, &stride);
+    if (!gunAt || stride != sizeof(HfProjectileWeapon)) return 0;
+    uintptr_t magAt = hf->component_record("WeaponMagazineComponentData", HF_ENTITY_CB9_EXPLODING_CROSSBOW, &stride);
+    if (!magAt || stride != sizeof(HfWeaponMagazine)) return 0;
+    HfProjectileSettings* shot = (HfProjectileSettings*)hf->projectile_row(bolt);
+    if (!shot || shot->type != bolt) return 0;
+
+    HfProjectileWeapon* gun = (HfProjectileWeapon*)gunAt;
+    HfWeaponMagazine* mag = (HfWeaponMagazine*)magAt;
+    uint32_t oldGun, oldFirst, oldPattern[32], pattern[32];
+    if (hf->read((uintptr_t)&gun->projectile, &oldGun, sizeof oldGun) ||
+        hf->read((uintptr_t)&mag->first_projectile, &oldFirst, sizeof oldFirst) ||
+        hf->read((uintptr_t)mag->pattern, oldPattern, sizeof oldPattern)) return 0;
+    for (unsigned i = 0; i < 32; i++) pattern[i] = bolt;
+
+    shot->damage = directDamage;
+    shot->impact_explosion = explosion;
+    shot->expiry_explosion = 0;
+    if (hf->write((uintptr_t)&gun->projectile, &bolt, sizeof bolt) ||
+        hf->write((uintptr_t)&mag->first_projectile, &bolt, sizeof bolt) ||
+        hf->write((uintptr_t)mag->pattern, pattern, sizeof pattern))
+    {
+        int failed = hf->write((uintptr_t)&gun->projectile, &oldGun, sizeof oldGun);
+        failed |= hf->write((uintptr_t)&mag->first_projectile, &oldFirst, sizeof oldFirst);
+        failed |= hf->write((uintptr_t)mag->pattern, oldPattern, sizeof oldPattern);
+        stopped = 1;
+        hf->log(mod, "Example stopped after feed write failure; rollback %s; restart required", failed ? "failed" : "requested successfully");
+        return 0;
+    }
+    return 1;
+}
+
+static void Ready(HfMod* mod, HfEvent event, void* user)
+{
+    rowsReady = 1;
+    retry = 0;
+}
+
+static void Tick(HfMod* mod, float dt, void* user)
+{
+    if (!rowsReady || applied || stopped) return;
+    retry -= dt;
+    if (retry > 0) return;
+    retry = 1;
+    const HfApi* hf = HF_API(mod);
+    const ElApi* lib = ElFind();
+    if (!lib)
+    {
+        if (!missingLogged) hf->log(mod, "Waiting for Explosives Library ABI 1; Crossbow unchanged");
+        missingLogged = 1;
+        return;
+    }
+    if (!configured)
+    {
+        if (!ConfigureDamage(hf)) return;
+        configured = 1;
+    }
+    if (!explosion)
+    {
+        ElExplosion definition = {
+            .size = sizeof definition,
+            .base = 407,
+            .damage = blastDamage,
+            .flags = EL_RADII,
+            .name = "example/explosives_consumer/plasma_blast",
+            .package = 0xA7B23B55209766AEull,
+            .inner_radius = 3,
+            .outer_radius = 5,
+            .shockwave_radius = 6
+        };
+        explosion = lib->register_explosion(&definition);
+        if (!explosion) return; /* May need another tick for registry/assets. */
+    }
+    if (!Connect(mod)) return;
+    applied = 1;
+    hf->log(mod, "Library example active: projectile=%u explosion=%u direct=%u blast=%u; re-equip Crossbow", bolt, explosion, directDamage, blastDamage);
+}
+
+HF_MOD_EXPORT int hellforge_mod_init(const HfApi* hf, HfMod* mod)
+{
+    if (hf->version < 15 || strcmp(hf->build_id(), "25480438")) return 1;
+    HfDamage damage = {
+        .size = sizeof damage, .base = 208,
+        .name = "example/explosives_consumer/direct", .scale = 1
+    };
+    directDamage = hf->add_damage(mod, &damage);
+    damage.base = 61;
+    damage.name = "example/explosives_consumer/blast";
+    blastDamage = hf->add_damage(mod, &damage);
+    if (!directDamage || !blastDamage) return 1;
+    HfProjectile projectile = {
+        .size = sizeof projectile,
+        .base = HF_PROJECTILE_CB9_EXPLODING_CROSSBOW,
+        .name = "example/explosives_consumer/bolt",
+        .damage = directDamage,
+        .visual_from = 193,
+        .spawn_effect = 0x386423966E9FF9A2ull,
+        .flight_effect = 0xA424C1FF90103592ull
+    };
+    bolt = hf->add_projectile(mod, &projectile);
+    if (!bolt) return 1;
+    hf->on(mod, HF_EVENT_PROJECTILES_READY, Ready, NULL);
+    return !hf->on_game_thread(mod, Tick, NULL);
+}

@@ -1,0 +1,10 @@
+build/
+dist/
+.zig-cache/
+zig-out/
+*.dll
+*.exe
+*.pdb
+*.obj
+*.o
+__pycache__/
