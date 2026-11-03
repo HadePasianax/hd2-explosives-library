@@ -63,3 +63,7 @@ The provider reserves 64 slots in one engine patch. It rejects an already-extend
 This is a runtime C ABI, not a HellForge dependency declaration or automatic installer. State the library requirement on your mod page. Keep the public header's ABI layout intact. On a future incompatible API change, consumers must explicitly adopt the new ABI.
 
 Do not unload the provider during play: engine pointers refer to its rows and allocated table. Use a full game restart after changing the mod set. Gameplay and asset ownership requirements remain the consumer's responsibility.
+
+## 0.2.0 editor integration
+
+Register custom projectile/damage records during initialization so they are present when the built-in editor reads its catalogue. Use stable namespaced names; renaming them can orphan saved edits. The editor integration does not add automatic readiness retries to consumers. Existing ABI 1 consumers need no rebuild. Runtime editor overrides are separate from immutable registration definitions. See [EDITOR.md](EDITOR.md).

@@ -31,7 +31,8 @@ static int Same(const ElExplosion* a,const ElExplosion* b){
  (!(a->flags&EL_RADII)||(a->inner_radius==b->inner_radius&&a->outer_radius==b->outer_radius&&a->shockwave_radius==b->shockwave_radius))&&
  (!(a->flags&EL_SHRAPNEL)||a->shrapnel_count==b->shrapnel_count);
 }
-static uint32_t Register(const ElExplosion* d){
+#include "editor_bridge.h"
+static uint32_t RegisterImpl(const ElExplosion* d){
  if(!nxReady||GetCurrentThreadId()!=gameThread||!d||d->size!=sizeof *d||!d->name||!d->name[0]||
     strlen(d->name)>127||!strchr(d->name,'/')||!d->base||d->base>=423||d->flags&~(EL_RADII|EL_SHRAPNEL)||
     !d->damage||!api->damage_row(d->damage))return 0;
@@ -48,27 +49,30 @@ static uint32_t Register(const ElExplosion* d){
  uint32_t id=NX_PRIVATE+used;memcpy(&row,&id,4);row.damage=d->damage;
  if(d->flags&EL_RADII){row.inner_radius=d->inner_radius;row.outer_radius=d->outer_radius;row.shockwave_radius=d->shockwave_radius;}
  if(d->flags&EL_SHRAPNEL)row.shrapnel_count=d->shrapnel_count;
- rows[used]=row;specs[used]=*d;strcpy(names[used],d->name);specs[used].name=names[used];
+ rows[used]=row;editorDefaults[used]=row;specs[used]=*d;strcpy(names[used],d->name);specs[used].name=names[used];
  MemoryBarrier();InterlockedExchangePointer((PVOID volatile*)((uintptr_t*)nxBlock+id),&rows[used]);used++;
  api->log(owner,"EL REGISTER name=%s explosion=%u donor=%u private_damage=%u radii=%.2f/%.2f/%.2f",d->name,id,d->base,d->damage,row.inner_radius,row.outer_radius,row.shockwave_radius);
  return id;
 }
-static int Copy(uint32_t id,HfExplosionSettings* out){
+static uint32_t Register(const ElExplosion* d){AcquireSRWLockExclusive(&editorLock);uint32_t id=RegisterImpl(d);ReleaseSRWLockExclusive(&editorLock);return id;}
+static int CopyImpl(uint32_t id,HfExplosionSettings* out){
  if(!nxReady||GetCurrentThreadId()!=gameThread||!out||id<NX_PRIVATE||id>=NX_PRIVATE+used)return 0;
  *out=rows[id-NX_PRIVATE];return 1;
 }
+static int Copy(uint32_t id,HfExplosionSettings* out){AcquireSRWLockShared(&editorLock);int ok=CopyImpl(id,out);ReleaseSRWLockShared(&editorLock);return ok;}
 static const char* Status(void){return nxReady?"ready":nxFailure;}
 static const ElApi service={sizeof(ElApi),EL_ABI,Register,Copy,Status};
 HF_MOD_EXPORT const ElApi* explosives_library_get_api(uint32_t abi){return abi==EL_ABI?&service:NULL;}
 static void Ready(HfMod* mod,HfEvent event,void* user){rowsReady=1;}
 static void Tick(HfMod* mod,float dt,void* user){
- gameThread=GetCurrentThreadId();if(!rowsReady||nxReady||failed)return;retry-=dt;if(retry>0)return;retry=2;
+ gameThread=GetCurrentThreadId();EditorTick();if(!rowsReady||nxReady||failed)return;retry-=dt;if(retry>0)return;retry=2;
  if(api->load_package(owner,0xA7B23B55209766AEull)!=HF_PACKAGE_RESIDENT)return;
  if(!NxInstall(mod)){failed=1;api->log(mod,"EL DISABLED: %s at RVA %llx; restart required",nxFailure,(unsigned long long)nxFailureRva);}
 }
+extern int ElInplaceInit(const HfApi*,HfMod*);
 HF_MOD_EXPORT int hellforge_mod_init(const HfApi* hf,HfMod* mod){
  if(hf->version<15||strcmp(hf->build_id(),"25480438"))return 1;
- owner=mod;api=hf;hf->on(mod,HF_EVENT_PROJECTILES_READY,Ready,NULL);
- hf->log(mod,"Explosives Library 0.1.0 experimental ABI 1; restart between changes; 64 private explosion slots");
+ owner=mod;api=hf;ElInplaceInit(hf,mod);hf->on(mod,HF_EVENT_PROJECTILES_READY,Ready,NULL);
+ hf->log(mod,"Explosives Library 0.2.0 ABI 1 + stock editor integration; restart between changes; 64 private explosion slots");
  return !hf->on_game_thread(mod,Tick,NULL);
 }

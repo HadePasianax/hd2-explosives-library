@@ -15,10 +15,16 @@ function Compile {
  & $compiler @flags @Arguments
  if($LASTEXITCODE -ne 0){throw 'Compilation failed'}
 }
-Compile -Arguments @('-shared','src/library.c','-o',(Join-Path $build 'explosives_library.dll'))
+Compile -Arguments @('-c','src/library.c','-o',(Join-Path $build 'library.o'))
+& $compiler c++ -target x86_64-windows-gnu -O2 -std=c++17 -fno-exceptions -fno-rtti -Wall -Werror -Wno-unused-parameter -I vendor/hellforge-sdk-15 -shared src/inplace_editor.cpp src/json.cpp (Join-Path $build 'library.o') -lbcrypt -o (Join-Path $build 'explosives_library.dll')
+if($LASTEXITCODE){throw 'Editor integration compilation failed'}
 Compile -Arguments @('-shared','examples/ops-debug/src/ops_debug.c','-o',(Join-Path $build 'explosives_library_ops_debug.dll'))
 Compile -Arguments @('-I',(Join-Path $root 'include'),'-x','c','-shared','docs/examples/consumer.c.txt','-o',(Join-Path $build 'example_consumer.dll'))
 if($Test){
+ & $compiler c++ -target x86_64-windows-gnu -O2 -std=c++17 -fno-exceptions -fno-rtti -Wall -Werror -Wno-unused-parameter -I vendor/hellforge-sdk-15 tests/test-editor-integration.cpp src/json.cpp -lbcrypt -o (Join-Path $build 'test-editor.exe')
+ if($LASTEXITCODE){throw 'Editor integration tests did not compile'}
+ & (Join-Path $build 'test-editor.exe')
+ if($LASTEXITCODE){throw 'Editor integration tests failed'}
  foreach($name in @('test-explosives-library','test-library-ops-debug','test-explosives-library-discovery')){
   $output=Join-Path $build ($name+'.exe')
   Compile -Arguments @(('tests/'+$name+'.c'),'-o',$output)

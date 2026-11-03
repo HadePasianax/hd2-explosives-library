@@ -2,12 +2,14 @@
   "format": 1,
   "id": "hade.explosives-library",
   "name": "Explosives Library",
-  "version": "0.1.0",
-  "description": "Experimental shared framework for HellForge mods to register private explosions with independent damage and blast settings. Includes public C API, source, developer documentation and an example. ABI 1; game build 25480438; HellForge SDK 15.",
+  "version": "0.2.0",
+  "description": "Shared private explosion registry and built-in HellForge Editor compatibility for displaying and editing custom projectile, explosion and damage-type records.",
   "icon": "icon.png",
   "gameplay": true,
   "code": {
     "dll": "explosives_library.dll",
-    "sdk": 15
+    "sdk": 15,
+    "prebuilt": true,
+    "game": "25480438"
   }
 }

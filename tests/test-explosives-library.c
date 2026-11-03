@@ -39,10 +39,23 @@ int main(void){
  assert(!memcmp(&before,&nativeRows[407],sizeof before));assert(damage.standard_damage==800);
  e.name="test/invalid";e.damage=61;assert(!Register(&e));e.damage=650;e.inner_radius=-1;assert(!Register(&e));
  e.inner_radius=6;e.outer_radius=8;e.name="test/one";DWORD saved=gameThread;gameThread=0;assert(!Register(&e));gameThread=saved;
+ const ElEditorApi* editor=explosives_library_editor_api(1);assert(editor&&!explosives_library_editor_api(2));
+ ElEditorRecord rec={.size=sizeof rec};assert(editor->record(0,&rec)&&rec.id==423&&!strcmp(rec.name,"test/one"));assert(!editor->record(64,&rec));
+ float now,base;assert(editor->read(423,20,&now,&base)&&now==8&&base==8);
+ float radius=9;assert(editor->set(423,20,&radius));assert(Copy(423,&result)&&result.outer_radius==8);
+ EditorTick();assert(Copy(423,&result)&&result.outer_radius==9);assert(editor->read(423,20,&now,&base)&&now==9&&base==8);
+ assert(editor->set(423,20,NULL));EditorTick();assert(Copy(423,&result)&&result.outer_radius==8);
+ radius=-1;assert(!editor->set(423,20,&radius));radius=NAN;assert(!editor->set(423,20,&radius));
+ assert(!editor->set(423,0,NULL)&&!editor->set(422,20,NULL)&&!editor->set(487,20,NULL));
+ radius=100;assert(editor->set(423,20,&radius));EditorTick();assert(Copy(423,&result)&&result.outer_radius==8);
+ radius=7;assert(editor->set(423,16,&radius));radius=9;assert(editor->set(423,20,&radius));EditorTick();assert(Copy(423,&result)&&result.inner_radius==7&&result.outer_radius==9);
+ e.name="test/one";assert(Register(&e)==423);assert(!memcmp(&before,&nativeRows[407],sizeof before));
  for(unsigned i=used;i<64;i++){char key[30];snprintf(key,sizeof key,"test/slot%u",i);e.name=key;assert(Register(&e)==423+i);}
  e.name="test/full";assert(!Register(&e)&&used==64);assert(!Copy(487,&result));
  assert(!memcmp(&before,&nativeRows[407],sizeof before));
  assert(explosives_library_get_api(1)&&!explosives_library_get_api(2));
- puts("PASS registry: ID allocation, idempotence, conflicting names, capacity, private damage validation, radius validation, thread restriction, donor isolation, guarded scanner and kick bound.");
+ puts("PASS editor bridge: enumeration, pending writes, game-thread application, reset, immutable registration defaults, invalid IDs/fields/NaN/radii rejection and donor isolation. Registry: ID allocation, idempotence, conflicting names, capacity, private damage validation, radius validation, thread restriction, donor isolation, guarded scanner and kick bound.");
  return 0;
 }
+
+int ElInplaceInit(const HfApi* api,HfMod* mod){return 1;}

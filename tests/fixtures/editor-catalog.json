@@ -1,0 +1,1211 @@
+{
+  "format": 1,
+  "build": "25480438",
+  "schema": "fixture",
+  "categories": [
+    {
+      "id": "projectiles",
+      "label": "projectiles",
+      "group": "ADVANCED"
+    },
+    {
+      "id": "damage",
+      "label": "damage",
+      "group": "ADVANCED"
+    },
+    {
+      "id": "explosions",
+      "label": "explosions",
+      "group": "ADVANCED"
+    }
+  ],
+  "objects": [
+    {
+      "id": "projectiles/142",
+      "name": "Projectile 142",
+      "category": "projectiles",
+      "subtitle": "Used",
+      "group": null,
+      "icon": null,
+      "tone": null,
+      "search": "projectile 142 used projectiles 142 aa turret - entry 0616 plas-1 scorcher",
+      "page": [
+        {
+          "title": "Projectile",
+          "key": "c|projectile",
+          "flat": true,
+          "plain": false,
+          "prefix": null,
+          "subs": [
+            {
+              "title": "Projectile",
+              "key": "c|projectile|Projectile",
+              "fold": false,
+              "prefix": null,
+              "rows": [
+                {
+                  "label": "Projectile velocity",
+                  "cat": "projectiles",
+                  "target": "142",
+                  "key": "velocity",
+                  "component": "ProjectileSettings",
+                  "ref": "142",
+                  "offset": 32,
+                  "type": "f32",
+                  "min": null,
+                  "max": null,
+                  "unit": "m/s",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "AA Turret - Entry 0616",
+                    "PLAS-1 Scorcher"
+                  ],
+                  "link": "ProjectileSettings::142:32",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|projectile.velocity"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Projectile mass",
+                  "cat": "projectiles",
+                  "target": "142",
+                  "key": "mass",
+                  "component": "ProjectileSettings",
+                  "ref": "142",
+                  "offset": 36,
+                  "type": "f32",
+                  "min": null,
+                  "max": null,
+                  "unit": "g",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "AA Turret - Entry 0616",
+                    "PLAS-1 Scorcher"
+                  ],
+                  "link": "ProjectileSettings::142:36",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|projectile.mass"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Projectile drag",
+                  "cat": "projectiles",
+                  "target": "142",
+                  "key": "drag",
+                  "component": "ProjectileSettings",
+                  "ref": "142",
+                  "offset": 40,
+                  "type": "f32",
+                  "min": null,
+                  "max": null,
+                  "unit": "\u00d7",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "AA Turret - Entry 0616",
+                    "PLAS-1 Scorcher"
+                  ],
+                  "link": "ProjectileSettings::142:40",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|projectile.drag"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Projectile gravity",
+                  "cat": "projectiles",
+                  "target": "142",
+                  "key": "gravity",
+                  "component": "ProjectileSettings",
+                  "ref": "142",
+                  "offset": 44,
+                  "type": "f32",
+                  "min": null,
+                  "max": null,
+                  "unit": "\u00d7",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "AA Turret - Entry 0616",
+                    "PLAS-1 Scorcher"
+                  ],
+                  "link": "ProjectileSettings::142:44",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|projectile.gravity"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Pellet count",
+                  "cat": "projectiles",
+                  "target": "142",
+                  "key": "pellet_count",
+                  "component": "ProjectileSettings",
+                  "ref": "142",
+                  "offset": 28,
+                  "type": "u32",
+                  "min": null,
+                  "max": null,
+                  "unit": "/shot",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "AA Turret - Entry 0616",
+                    "PLAS-1 Scorcher"
+                  ],
+                  "link": "ProjectileSettings::142:28",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|projectile.pellet_count"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Damage type",
+                  "cat": "projectiles",
+                  "target": "142",
+                  "key": "damage",
+                  "component": "ProjectileSettings",
+                  "ref": "142",
+                  "offset": 60,
+                  "type": "u32",
+                  "min": 1,
+                  "max": 649,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": null,
+                  "link": "ProjectileSettings::142:60"
+                },
+                {
+                  "label": "Penetration slowdown",
+                  "cat": "projectiles",
+                  "target": "142",
+                  "key": "penetration_slowdown",
+                  "component": "ProjectileSettings",
+                  "ref": "142",
+                  "offset": 64,
+                  "type": "f32",
+                  "min": null,
+                  "max": null,
+                  "unit": "\u00d7",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "PLAS-1 Scorcher"
+                  ],
+                  "link": "ProjectileSettings::142:64",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|projectile.penetration_slowdown"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Impact payload",
+                  "cat": "projectiles",
+                  "target": "142",
+                  "key": "terminal.impact.explosion",
+                  "component": "ProjectileSettings",
+                  "ref": "142",
+                  "offset": 144,
+                  "type": "u32",
+                  "min": null,
+                  "max": null,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": true,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "PLAS-1 Scorcher"
+                  ],
+                  "link": "ProjectileSettings::142:144",
+                  "pick": "explosion",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|terminal.primary.impact.explosion"
+                  ],
+                  "hd2rKind": "explosion"
+                },
+                {
+                  "label": "Expiry payload",
+                  "cat": "projectiles",
+                  "target": "142",
+                  "key": "terminal.expiry.explosion",
+                  "component": "ProjectileSettings",
+                  "ref": "142",
+                  "offset": 156,
+                  "type": "u32",
+                  "min": null,
+                  "max": null,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": true,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "PLAS-1 Scorcher"
+                  ],
+                  "link": "ProjectileSettings::142:156",
+                  "pick": "explosion",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|terminal.primary.expiry.explosion"
+                  ],
+                  "hd2rKind": "explosion"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "notOffered": null,
+      "sprite": null,
+      "faction": null,
+      "detail": null
+    },
+    {
+      "id": "damage/56",
+      "name": "Damage type 56",
+      "category": "damage",
+      "subtitle": "Used",
+      "group": null,
+      "icon": null,
+      "tone": null,
+      "search": "damage type 56 used damage types 56 aa turret - entry 0616 plas-1 scorcher plas-15 loyalist",
+      "page": [
+        {
+          "title": "Damage",
+          "key": "c|damage",
+          "flat": true,
+          "plain": false,
+          "prefix": null,
+          "subs": [
+            {
+              "title": "Damage",
+              "key": "c|damage|Damage",
+              "fold": false,
+              "prefix": null,
+              "rows": [
+                {
+                  "label": "Standard damage",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "standard_damage",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 4,
+                  "type": "i32",
+                  "min": null,
+                  "max": null,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "AA Turret - Entry 0616",
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:4",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.standard_damage",
+                    "pw|PLAS-15 Loyalist|damage.standard_damage"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Durable damage",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "durable_damage",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 8,
+                  "type": "i32",
+                  "min": null,
+                  "max": null,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "AA Turret - Entry 0616",
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:8",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.durable_damage",
+                    "pw|PLAS-15 Loyalist|damage.durable_damage"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Armor penetration: direct",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "ap_direct",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 12,
+                  "type": "u32",
+                  "min": null,
+                  "max": null,
+                  "unit": "AP",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "AA Turret - Entry 0616",
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:12",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.ap_direct",
+                    "pw|PLAS-15 Loyalist|damage.ap_direct"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Armor penetration: slight angle",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "ap_slight",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 16,
+                  "type": "u32",
+                  "min": null,
+                  "max": null,
+                  "unit": "AP",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "AA Turret - Entry 0616",
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:16",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.ap_slight",
+                    "pw|PLAS-15 Loyalist|damage.ap_slight"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Armor penetration: large angle",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "ap_large",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 20,
+                  "type": "u32",
+                  "min": null,
+                  "max": null,
+                  "unit": "AP",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "AA Turret - Entry 0616",
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:20",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.ap_large",
+                    "pw|PLAS-15 Loyalist|damage.ap_large"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Armor penetration: extreme angle",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "ap_extreme",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 24,
+                  "type": "u32",
+                  "min": null,
+                  "max": null,
+                  "unit": "AP",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "AA Turret - Entry 0616",
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:24",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.ap_extreme",
+                    "pw|PLAS-15 Loyalist|damage.ap_extreme"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Demolition",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "demolition",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 28,
+                  "type": "u32",
+                  "min": null,
+                  "max": null,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "AA Turret - Entry 0616",
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:28",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.demolition",
+                    "pw|PLAS-15 Loyalist|damage.demolition"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Stagger",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "stagger",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 32,
+                  "type": "u32",
+                  "min": null,
+                  "max": null,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "AA Turret - Entry 0616",
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:32",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.stagger",
+                    "pw|PLAS-15 Loyalist|damage.stagger"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Push force",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "push_force",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 36,
+                  "type": "u32",
+                  "min": null,
+                  "max": null,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "AA Turret - Entry 0616",
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:36",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.push_force",
+                    "pw|PLAS-15 Loyalist|damage.push_force"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Status 1",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "status_1_type",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 44,
+                  "type": "u32",
+                  "min": null,
+                  "max": null,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:44",
+                  "pick": "status",
+                  "slot": 1,
+                  "slots": "",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.status_1_type",
+                    "pw|PLAS-15 Loyalist|damage.status_1_type"
+                  ],
+                  "hd2rKind": "status"
+                },
+                {
+                  "label": "Status 1 strength",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "status_1_strength",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 48,
+                  "type": "f32",
+                  "min": 0,
+                  "max": 1000,
+                  "unit": "\u00d7",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:48",
+                  "slot": 1,
+                  "slots": "",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.status_1_strength",
+                    "pw|PLAS-15 Loyalist|damage.status_1_strength"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Status 2",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "status_2_type",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 52,
+                  "type": "u32",
+                  "min": null,
+                  "max": null,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:52",
+                  "pick": "status",
+                  "slot": 2,
+                  "slots": "",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.status_2_type",
+                    "pw|PLAS-15 Loyalist|damage.status_2_type"
+                  ],
+                  "hd2rKind": "status"
+                },
+                {
+                  "label": "Status 2 strength",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "status_2_strength",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 56,
+                  "type": "f32",
+                  "min": 0,
+                  "max": 1000,
+                  "unit": "\u00d7",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:56",
+                  "slot": 2,
+                  "slots": "",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.status_2_strength",
+                    "pw|PLAS-15 Loyalist|damage.status_2_strength"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Status 3",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "status_3_type",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 60,
+                  "type": "u32",
+                  "min": null,
+                  "max": null,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:60",
+                  "pick": "status",
+                  "slot": 3,
+                  "slots": "",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.status_3_type",
+                    "pw|PLAS-15 Loyalist|damage.status_3_type"
+                  ],
+                  "hd2rKind": "status"
+                },
+                {
+                  "label": "Status 3 strength",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "status_3_strength",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 64,
+                  "type": "f32",
+                  "min": 0,
+                  "max": 1000,
+                  "unit": "\u00d7",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:64",
+                  "slot": 3,
+                  "slots": "",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.status_3_strength",
+                    "pw|PLAS-15 Loyalist|damage.status_3_strength"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Status 4",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "status_4_type",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 68,
+                  "type": "u32",
+                  "min": null,
+                  "max": null,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:68",
+                  "pick": "status",
+                  "slot": 4,
+                  "slots": "",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.status_4_type",
+                    "pw|PLAS-15 Loyalist|damage.status_4_type"
+                  ],
+                  "hd2rKind": "status"
+                },
+                {
+                  "label": "Status 4 strength",
+                  "cat": "damage",
+                  "target": "56",
+                  "key": "status_4_strength",
+                  "component": "DamageInfo",
+                  "ref": "56",
+                  "offset": 72,
+                  "type": "f32",
+                  "min": 0,
+                  "max": 1000,
+                  "unit": "\u00d7",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "PLAS-1 Scorcher",
+                    "PLAS-15 Loyalist"
+                  ],
+                  "link": "DamageInfo::56:72",
+                  "slot": 4,
+                  "slots": "",
+                  "hd2r": [
+                    "pw|PLAS-1 Scorcher|damage.status_4_strength",
+                    "pw|PLAS-15 Loyalist|damage.status_4_strength"
+                  ],
+                  "hd2rKind": "number"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "notOffered": null,
+      "sprite": null,
+      "faction": null,
+      "detail": null
+    },
+    {
+      "id": "explosions/MD-I4 Incendiary Mines (mine)",
+      "name": "MD-I4 Incendiary Mines (mine)",
+      "category": "explosions",
+      "subtitle": "Stratagem",
+      "group": null,
+      "icon": null,
+      "tone": null,
+      "search": "md-i4 incendiary mines (mine) stratagem explosions md-i4 incendiary mines (mine) ",
+      "page": [
+        {
+          "title": "Explosion",
+          "key": "c|identity:explosion",
+          "flat": true,
+          "plain": false,
+          "prefix": null,
+          "subs": [
+            {
+              "title": "Explosion",
+              "key": "c|identity:explosion|Explosion",
+              "fold": false,
+              "prefix": null,
+              "rows": [
+                {
+                  "label": "Inner radius",
+                  "cat": "explosions",
+                  "target": "MD-I4 Incendiary Mines (mine)",
+                  "key": "explosion.inner_radius",
+                  "component": "ExplosionSettings",
+                  "ref": "72",
+                  "offset": 16,
+                  "type": "f32",
+                  "min": 0,
+                  "max": 150,
+                  "unit": "m",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "MD-I4 Incendiary Mines",
+                    "Md-i4 Incendiary Mines - Mine Launcher Incendiary"
+                  ],
+                  "link": "ExplosionSettings::72:16",
+                  "hd2r": [
+                    "ex|stratagem/mdi4_incendiary_mines/mine|explosion.inner_radius",
+                    "st|MD-I4 Incendiary Mines|stratagem:md_i4_incendiary_mines:md_i4_incendiary_mines_attack_main_mine_mine:explosion.inner_radius"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Outer radius",
+                  "cat": "explosions",
+                  "target": "MD-I4 Incendiary Mines (mine)",
+                  "key": "explosion.outer_radius",
+                  "component": "ExplosionSettings",
+                  "ref": "72",
+                  "offset": 20,
+                  "type": "f32",
+                  "min": 0,
+                  "max": 150,
+                  "unit": "m",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "MD-I4 Incendiary Mines",
+                    "Md-i4 Incendiary Mines - Mine Launcher Incendiary"
+                  ],
+                  "link": "ExplosionSettings::72:20",
+                  "hd2r": [
+                    "ex|stratagem/mdi4_incendiary_mines/mine|explosion.outer_radius",
+                    "st|MD-I4 Incendiary Mines|stratagem:md_i4_incendiary_mines:md_i4_incendiary_mines_attack_main_mine_mine:explosion.outer_radius"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Shockwave radius",
+                  "cat": "explosions",
+                  "target": "MD-I4 Incendiary Mines (mine)",
+                  "key": "explosion.shockwave_radius",
+                  "component": "ExplosionSettings",
+                  "ref": "72",
+                  "offset": 24,
+                  "type": "f32",
+                  "min": 0,
+                  "max": 150,
+                  "unit": "m",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "MD-I4 Incendiary Mines",
+                    "Md-i4 Incendiary Mines - Mine Launcher Incendiary"
+                  ],
+                  "link": "ExplosionSettings::72:24",
+                  "hd2r": [
+                    "ex|stratagem/mdi4_incendiary_mines/mine|explosion.shockwave_radius",
+                    "st|MD-I4 Incendiary Mines|stratagem:md_i4_incendiary_mines:md_i4_incendiary_mines_attack_main_mine_mine:explosion.shockwave_radius"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Shrapnel count",
+                  "cat": "explosions",
+                  "target": "MD-I4 Incendiary Mines (mine)",
+                  "key": "explosion.shrapnel_count",
+                  "component": "ExplosionSettings",
+                  "ref": "72",
+                  "offset": 80,
+                  "type": "u32",
+                  "min": 0,
+                  "max": 64,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": null,
+                  "link": "ExplosionSettings::72:80",
+                  "hd2r": [
+                    "ex|stratagem/mdi4_incendiary_mines/mine|explosion.shrapnel_count"
+                  ],
+                  "hd2rKind": "number"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Damage",
+          "key": "c|damage",
+          "flat": true,
+          "plain": false,
+          "prefix": null,
+          "subs": [
+            {
+              "title": "Damage",
+              "key": "c|damage|Damage",
+              "fold": false,
+              "prefix": null,
+              "rows": [
+                {
+                  "label": "Standard damage",
+                  "cat": "explosions",
+                  "target": "MD-I4 Incendiary Mines (mine)",
+                  "key": "explosion.damage.standard_damage",
+                  "component": "DamageInfo",
+                  "ref": "407",
+                  "offset": 4,
+                  "type": "i32",
+                  "min": 0,
+                  "max": 20000,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "MD-I4 Incendiary Mines",
+                    "Md-i4 Incendiary Mines - Mine Launcher Incendiary"
+                  ],
+                  "link": "DamageInfo::407:4",
+                  "hd2r": [
+                    "ex|stratagem/mdi4_incendiary_mines/mine|explosion.damage.standard_damage",
+                    "st|MD-I4 Incendiary Mines|stratagem:md_i4_incendiary_mines:md_i4_incendiary_mines_attack_main_mine_mine_damage:explosion.damage.standard_damage"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Durable damage",
+                  "cat": "explosions",
+                  "target": "MD-I4 Incendiary Mines (mine)",
+                  "key": "explosion.damage.durable_damage",
+                  "component": "DamageInfo",
+                  "ref": "407",
+                  "offset": 8,
+                  "type": "i32",
+                  "min": 0,
+                  "max": 20000,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "MD-I4 Incendiary Mines",
+                    "Md-i4 Incendiary Mines - Mine Launcher Incendiary"
+                  ],
+                  "link": "DamageInfo::407:8",
+                  "hd2r": [
+                    "ex|stratagem/mdi4_incendiary_mines/mine|explosion.damage.durable_damage",
+                    "st|MD-I4 Incendiary Mines|stratagem:md_i4_incendiary_mines:md_i4_incendiary_mines_attack_main_mine_mine_damage:explosion.damage.durable_damage"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Armor penetration: direct",
+                  "cat": "explosions",
+                  "target": "MD-I4 Incendiary Mines (mine)",
+                  "key": "explosion.damage.ap_direct",
+                  "component": "DamageInfo",
+                  "ref": "407",
+                  "offset": 12,
+                  "type": "u32",
+                  "min": 0,
+                  "max": 10,
+                  "unit": "AP",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "MD-I4 Incendiary Mines",
+                    "Md-i4 Incendiary Mines - Mine Launcher Incendiary"
+                  ],
+                  "link": "DamageInfo::407:12",
+                  "hd2r": [
+                    "ex|stratagem/mdi4_incendiary_mines/mine|explosion.damage.ap_direct",
+                    "st|MD-I4 Incendiary Mines|stratagem:md_i4_incendiary_mines:md_i4_incendiary_mines_attack_main_mine_mine_damage:explosion.damage.ap_direct"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Armor penetration: slight angle",
+                  "cat": "explosions",
+                  "target": "MD-I4 Incendiary Mines (mine)",
+                  "key": "explosion.damage.ap_slight",
+                  "component": "DamageInfo",
+                  "ref": "407",
+                  "offset": 16,
+                  "type": "u32",
+                  "min": 0,
+                  "max": 10,
+                  "unit": "AP",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "MD-I4 Incendiary Mines",
+                    "Md-i4 Incendiary Mines - Mine Launcher Incendiary"
+                  ],
+                  "link": "DamageInfo::407:16",
+                  "hd2r": [
+                    "ex|stratagem/mdi4_incendiary_mines/mine|explosion.damage.ap_slight",
+                    "st|MD-I4 Incendiary Mines|stratagem:md_i4_incendiary_mines:md_i4_incendiary_mines_attack_main_mine_mine_damage:explosion.damage.ap_slight"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Armor penetration: large angle",
+                  "cat": "explosions",
+                  "target": "MD-I4 Incendiary Mines (mine)",
+                  "key": "explosion.damage.ap_large",
+                  "component": "DamageInfo",
+                  "ref": "407",
+                  "offset": 20,
+                  "type": "u32",
+                  "min": 0,
+                  "max": 10,
+                  "unit": "AP",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "MD-I4 Incendiary Mines",
+                    "Md-i4 Incendiary Mines - Mine Launcher Incendiary"
+                  ],
+                  "link": "DamageInfo::407:20",
+                  "hd2r": [
+                    "ex|stratagem/mdi4_incendiary_mines/mine|explosion.damage.ap_large",
+                    "st|MD-I4 Incendiary Mines|stratagem:md_i4_incendiary_mines:md_i4_incendiary_mines_attack_main_mine_mine_damage:explosion.damage.ap_large"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Armor penetration: extreme angle",
+                  "cat": "explosions",
+                  "target": "MD-I4 Incendiary Mines (mine)",
+                  "key": "explosion.damage.ap_extreme",
+                  "component": "DamageInfo",
+                  "ref": "407",
+                  "offset": 24,
+                  "type": "u32",
+                  "min": 0,
+                  "max": 10,
+                  "unit": "AP",
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "MD-I4 Incendiary Mines",
+                    "Md-i4 Incendiary Mines - Mine Launcher Incendiary"
+                  ],
+                  "link": "DamageInfo::407:24",
+                  "hd2r": [
+                    "ex|stratagem/mdi4_incendiary_mines/mine|explosion.damage.ap_extreme",
+                    "st|MD-I4 Incendiary Mines|stratagem:md_i4_incendiary_mines:md_i4_incendiary_mines_attack_main_mine_mine_damage:explosion.damage.ap_extreme"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Demolition",
+                  "cat": "explosions",
+                  "target": "MD-I4 Incendiary Mines (mine)",
+                  "key": "explosion.damage.demolition",
+                  "component": "DamageInfo",
+                  "ref": "407",
+                  "offset": 28,
+                  "type": "u32",
+                  "min": 0,
+                  "max": 200,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "MD-I4 Incendiary Mines",
+                    "Md-i4 Incendiary Mines - Mine Launcher Incendiary"
+                  ],
+                  "link": "DamageInfo::407:28",
+                  "hd2r": [
+                    "ex|stratagem/mdi4_incendiary_mines/mine|explosion.damage.demolition",
+                    "st|MD-I4 Incendiary Mines|stratagem:md_i4_incendiary_mines:md_i4_incendiary_mines_attack_main_mine_mine_damage:explosion.damage.demolition"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Stagger",
+                  "cat": "explosions",
+                  "target": "MD-I4 Incendiary Mines (mine)",
+                  "key": "explosion.damage.stagger",
+                  "component": "DamageInfo",
+                  "ref": "407",
+                  "offset": 32,
+                  "type": "u32",
+                  "min": 0,
+                  "max": 500,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "MD-I4 Incendiary Mines",
+                    "Md-i4 Incendiary Mines - Mine Launcher Incendiary"
+                  ],
+                  "link": "DamageInfo::407:32",
+                  "hd2r": [
+                    "ex|stratagem/mdi4_incendiary_mines/mine|explosion.damage.stagger",
+                    "st|MD-I4 Incendiary Mines|stratagem:md_i4_incendiary_mines:md_i4_incendiary_mines_attack_main_mine_mine_damage:explosion.damage.stagger"
+                  ],
+                  "hd2rKind": "number"
+                },
+                {
+                  "label": "Push force",
+                  "cat": "explosions",
+                  "target": "MD-I4 Incendiary Mines (mine)",
+                  "key": "explosion.damage.push_force",
+                  "component": "DamageInfo",
+                  "ref": "407",
+                  "offset": 36,
+                  "type": "u32",
+                  "min": 0,
+                  "max": 5000,
+                  "unit": null,
+                  "applies": "now",
+                  "verified": false,
+                  "unverified": true,
+                  "shared": true,
+                  "also": [
+                    "MD-I4 Incendiary Mines",
+                    "Md-i4 Incendiary Mines - Mine Launcher Incendiary"
+                  ],
+                  "link": "DamageInfo::407:36",
+                  "hd2r": [
+                    "ex|stratagem/mdi4_incendiary_mines/mine|explosion.damage.push_force",
+                    "st|MD-I4 Incendiary Mines|stratagem:md_i4_incendiary_mines:md_i4_incendiary_mines_attack_main_mine_mine_damage:explosion.damage.push_force"
+                  ],
+                  "hd2rKind": "number"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "notOffered": null,
+      "sprite": null,
+      "faction": null,
+      "detail": null
+    }
+  ],
+  "references": {
+    "explosion": [
+      {
+        "value": 36,
+        "label": "explosion 36",
+        "group": "Native"
+      }
+    ]
+  },
+  "hd2r": {}
+}

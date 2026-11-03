@@ -1,59 +1,64 @@
 # Explosives Library
 
-An experimental shared explosion registry for HellForge mods. It lets cooperating mods create private explosion definitions and connect them to HellForge's private damage definitions, instead of changing a native explosion used by other weapons.
+**0.2.0 · Gameplay API ABI 1 · HellForge SDK 15 · game build 25480438 · Windows x64**
 
-**Version:** 0.1.0 · **API ABI:** 1 · **HellForge SDK:** 15 or later · **Supported game build:** 25480438 · **Platform:** Windows x64
+Explosives Library provides shared private explosion definitions for HellForge mods. Version 0.2.0 also adds compatibility with the **built-in HellForge Editor**, allowing custom **Explosion, Projectile and Damage Type IDs** to be displayed and their supported fields edited in the existing Advanced categories. No replacement editor is required.
 
-## For players
+## Install and use
 
-1. Download [Explosives Library 0.1.0](downloads/explosives-library-0.1.0.zip), import it into HellForge, and enable it.
-2. Enable a mod that explicitly supports Explosives Library. Installing the library alone adds no weapons or stratagems and changes no native damage values.
-3. Restart the game after changing the library or its consuming mods.
+1. Download [Explosives Library 0.2.0](downloads/explosives-library-0.2.0.zip), import it into HellForge, and enable it instead of an older release or editor lab. Keep one EL provider enabled.
+2. Enable a compatible consumer, such as More Plasma Stratagems. The library alone adds no weapons or stratagems. Other mods' HellForge-registered custom projectiles/damage can also appear without using EL for explosions.
+3. Keep the provider before the built-in editor where load order is configurable, then fully restart the game. Consumers must implement readiness retries; loading EL first is not a substitute for that.
+4. Open F8 > ADVANCED > **Projectiles**, **Damage Types** or **Explosions**. Search the registered namespace/source name, such as `hade/plasma_stratagems/mortar_max_shell`.
+5. Enter a value and confirm with Enter/Tab, then **APPLY/F9**. A reset must also be applied. Reopen the editor to check the value, and test a fresh projectile/deployment in game.
 
-The supplied OPS debug consumer waits for the library to become ready, so its position above or below the library in the mod list does not matter. Other consumers must implement the same readiness handling. Keep only one library provider enabled.
+The editor DLL and its catalogue on disk are not replaced. EL expands the catalogue in memory when the editor reads it, routes custom fields to their runtime records, and replays sandbox-session saved edits during reload so reset removals do not reappear as old overrides.
 
-The library extends the running game's explosion table. It does not edit game files on disk. Do not enable the older Private Explosion Lab alongside it: both attempt to own that table extension.
+### What can be edited
 
-## For authors
+| Category | Integration |
+| --- | --- |
+| Projectiles | Custom HellForge projectile records: flight fields, damage reference, impact and expiry payload references where the backend permits them |
+| Damage Types | Custom direct/blast damage records, including normal/durable damage, penetration and force fields supplied by the editor template |
+| Explosions | Runtime impact-explosion views for discovered custom projectiles: EL inner/outer/shockwave radii and a section for the referenced damage record |
 
-Copy [`include/explosives_library.h`](include/explosives_library.h) into your mod's source. Use HellForge's `add_damage` and `add_projectile` during mod initialization. After `HF_EVENT_PROJECTILES_READY`, discover the shared provider with `ElFind()` from a game-thread callback, register an explosion, and connect the returned ID to your private projectile or explosive component.
+The editor exposes record fields; it does not renumber record identities. Projectile payload references use named namespace/source aliases corresponding to their explosion views, with `None` for zero. The aliases resolve to actual numeric IDs before a write reaches the backend; virtual UI IDs are not written into the game's projectile table. Labels describe the projectile's runtime payload view, not necessarily the canonical EL registration key. Multiple views may share one actual explosion/damage record, so editing it affects every consumer of that record.
 
-Do not copy `library.c` or `registry_patch.h` into each consuming mod. Install one provider and share its registry.
+EL explosion visuals/audio are inherited from a native donor. This release does not import new effects/audio, add new status-effect mechanics, or expose every explosion field. Radii must satisfy **inner <= outer <= shockwave**. Raise shockwave before raising outer beyond it, or apply a consistent set. A queued request is not proof it applied: check `EL EDIT APPLIED`.
+
+### Optional editor integration
+
+`explosives-library.ini` defaults to `[editor] enabled=1`. Set `enabled=0` in the package/unpacked mod configuration and restart to use the explosion registry without the editor hooks. No binary-specific editor staging probe is included in this release.
+
+## Limitations and test status
+
+- Community/user testing confirmed rendering and editing with other mods. The OPS Debug consumer has an unresolved, reported pre-APPLY staging issue and is treated as a known test exception; its cause is not established.
+- Multiplayer has **not** been verified for this editor integration. Do not assume host/client synchronization is established.
+- Discovery captures custom projectile/damage records registered **before the editor reads its catalogue**. Records registered later, or an editor initialized before the library, can be missing. Load-order testing is encouraging but does not cover every configuration.
+- Explosion views resolve impact IDs after EL becomes ready. Non-EL/native explosions are not editable through these EL views; use their normal editor entries. Expiry payload labels are supported, but dedicated expiry-explosion edit views are not provided.
+- Saved field keys use registered mod/name/field identities, but persistence when mod sets change and numeric IDs are reassigned remains unverified. Payload-swap selections must be rechecked after such changes. Renaming registered records can orphan saved overrides.
+- A consumer can intentionally reapply its own profiles and replace editor values. Change consumer presets before editing and verify actual gameplay; registration/read logs alone do not prove damage behavior.
+- Baseline preservation covers the current session from the first editor write. Full restart/default recovery across all consumers remains unverified. The sandbox reload correction is included, but not every editor/version combination is covered.
+- 64 **unique private explosion definitions** are shared by all consumers. Firing a registered explosion repeatedly uses no additional slots. Capacity is unchanged in 0.2.0.
+- Supported game build is **25480438**. The catalogue/build and backend validation must succeed. Backend-rejected fields/swaps remain rejected; this is not a general validation bypass.
+
+See [editor usage and troubleshooting](docs/EDITOR.md) for logs, test steps and recovery.
+
+## For mod authors
+
+Copy [include/explosives_library.h](include/explosives_library.h). Register private damage/projectile records with HellForge during initialization. After PROJECTILES_READY, discover EL with `ElFind()` on the game thread; retry until the provider and required packages are ready. Register an explosion and assign the **returned ID** to your private projectile. Never hard-code or persist allocated explosion IDs.
+
+Gameplay **ABI 1 is unchanged**: existing consumers do not need rebuilding for 0.2.0. The optional editor bridge is separate from that gameplay ABI. Definitions retain their registration identity/defaults; editor radius overrides affect runtime rows without changing registration idempotence.
 
 - [Author guide](docs/AUTHOR-GUIDE.md)
-- [API reference](docs/API.md)
-- [Troubleshooting and validation](docs/TESTING.md)
-- [Standalone consumer example](docs/examples/consumer.c.txt)
-- [HellForge page text](HELLFORGE-PAGE.md)
-- [Changelog](CHANGELOG.md)
+- [Gameplay API](docs/API.md)
+- [Editor integration](docs/EDITOR.md)
+- [OPS debug example](examples/ops-debug): useful for inspecting the API; currently a known editor-staging test exception.
 
-## Current limits
+Only one library should own the table extension. Do not embed `library.c`/`registry_patch.h` in every consumer or run the old Private Explosion Lab alongside EL.
 
-There are **64 private explosion slots shared by all consumers**. Registration is session-local and definitions are immutable. Numeric IDs must never be hard-coded or carried across sessions.
+## Build and licence
 
-The current API can override the private damage link, three radii, and shrapnel count. Other explosion data, including explosion effects and audio, is inherited from the native donor. It does not expose independent explosion FX/audio selection, invent new status mechanics, or automatically alter projectile flight or weapon firing sounds.
+Use `powershell -File scripts/build.ps1 -Zig C:/path/to/zig.exe -Test`; output/caches remain in `build/`. The fixture uses a small generated catalogue under `tests/fixtures` for reproducible source builds. Project validation additionally used the supplied full stock catalogue.
 
-Damage registration uses HellForge's existing API; this library supplies the missing shared explosion registry. Native donors are copied from their loaded state. Edits applied to a donor before cloning may influence that copy; independence does not mean a guaranteed pristine vanilla snapshot. Opaque asset/auxiliary references remain shared.
-
-Game updates require validation of the engine integration. This version checks the game build and engine instructions and refuses unsupported table layouts. Restart if initialization fails; do not unload or hot-reload the provider in a running session. Multiplayer compatibility and simultaneous use by independently authored consumer mods have not been validated.
-
-## Testing status
-
-Private explosion and damage handling was first tested through Impact grenade and Crossbow overwrites in a separate lab. The shared library was then exercised through an OPS overwrite: registration, private shell routing, and an explosion damage event near the impact were recorded. These are targeted tests, not proof that every explosion donor or delivery system works.
-
-Source and public header are available under the [MIT license](LICENSE).
-
-## Build and test from this repository
-
-Use Windows x64 and a Zig C compiler. The checked build used Zig 0.17.0. HellForge SDK 15 headers are vendored under their MIT-0 license; see [third-party notices](THIRD-PARTY-NOTICES.md).
-
-```powershell
-./scripts/build.ps1 -Zig 'C:/path/to/zig.exe' -Test
-python ./scripts/package.py
-```
-
-The build script compiles the provider, the [OPS debug consumer](examples/ops-debug), and the standalone documentation example. With `-Test`, it also runs the registry, OPS routing, and real DLL-discovery harnesses. Caches and outputs stay under `build/` in this checkout. `package.py` writes importable source ZIPs under `dist/`; a compiled DLL is not required in the HellForge package.
-
-The checked-in `downloads/` ZIP is the initial documented 0.1.0 release. Future source changes require rebuilding and versioning the download; it does not automatically follow commits. Do not import the entire repository as a HellForge mod: use the packaged ZIP, which excludes tests and example source from the provider.
-
-The OPS debug consumer is an optional test overwrite, not part of normal installation. Build/package it separately and disable it after testing. This repository does not include game files, personal runtime logs, or credentials.
+The combined 0.2.0 integration is distributed under **GPL-3.0**, because it incorporates HellForge's JSON implementation. The original library's permissive notice is retained in `LIBRARY-LICENSE-MIT.txt`; SDK headers retain their separate licence. See [third-party notices](THIRD-PARTY-NOTICES.md).

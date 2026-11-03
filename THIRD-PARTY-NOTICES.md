@@ -1,5 +1,5 @@
 # Third-party notices
 
-The vendored HellForge SDK 15 headers are by SkyeShade and are covered by the MIT No Attribution (MIT-0) license in `vendor/hellforge-sdk-15/LICENSE-SDK`. The library's MIT license does not replace that license.
+The JSON parser/writer (src/json.cpp and src/json.h) is derived from SkyeShade/HellForge commit b1aef771474710eab5461d360444cd80a809c70c and is GPL-3.0 licensed. The combined 0.2.0 library/integration is distributed under GPL-3.0; the original permissive library notice is retained separately.
 
-Zig and game assets are not bundled. Consumers reference native game resources by ID and must manage their gameplay and asset requirements.
+Vendored HellForge SDK 15 headers retain their MIT-0 licence in vendor/hellforge-sdk-15/LICENSE-SDK. Zig and game assets are not bundled.

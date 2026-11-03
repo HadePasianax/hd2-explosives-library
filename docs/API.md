@@ -62,3 +62,7 @@ There is no separate library damage allocator. Use `HfApi.add_damage(mod, &defin
 ## Capacity and lifetime
 
 ABI 1 reserves 64 explosion slots shared by all consumers, normally 423–486 on this build. Those numbers are implementation details, not identifiers for authors to hard-code. Damage/projectile allocation and other consumers may change the IDs your mod receives. Restart the game to discard registrations; no hot-unload or unregister is supported.
+
+## Editor compatibility in 0.2.0
+
+Gameplay ABI 1 is unchanged. The optional `explosives_library_editor_api(1)` bridge is for tooling: it enumerates registered EL definitions, reads radius values/defaults and queues radius overrides/reset requests. It does not replace `ElFind()` and is not required by consumers. Game-thread application validates ordered radii. Registration identities/defaults stay immutable even when the editor overrides a runtime row. See [EDITOR.md](EDITOR.md) for supported fields, alias naming, startup constraints and unverified behavior.
