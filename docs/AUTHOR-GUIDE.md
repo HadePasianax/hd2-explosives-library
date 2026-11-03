@@ -67,3 +67,7 @@ Do not unload the provider during play: engine pointers refer to its rows and al
 ## 0.2.0 editor integration
 
 Register custom projectile/damage records during initialization so they are present when the built-in editor reads its catalogue. Use stable namespaced names; renaming them can orphan saved edits. The editor integration does not add automatic readiness retries to consumers. Existing ABI 1 consumers need no rebuild. Runtime editor overrides are separate from immutable registration definitions. See [EDITOR.md](EDITOR.md).
+
+## Callback slot handling
+
+EL 0.2.1 can use its own validated shared update hook if HellForge refuses its game-thread callback registration. This protects the provider only; consumer mods must still check their own `on_game_thread` result and implement appropriate failure handling. Always keep calls to the EL registration API on the actual game thread. `src/game_tick_fallback.h` contains the provider's build-specific adapter, adapted from Armor Transmog 0.1.70; it does not create a worker thread or expand the 16-slot pool.

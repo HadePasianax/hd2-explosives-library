@@ -1,3 +1,11 @@
+## 0.2.1
+
+- Added a callback-slot fallback adapted from Beelzebub's Armor Transmog 0.1.70. EL still requests a normal HellForge game-thread callback first. If registration is refused, it validates the supported game build's callsite and joins HellForge's shared hook chain for game.dll+0x13270B0.
+- The fallback recognizes the frame caller through the stack; the secondary caller is used only after 250 ms without the primary caller. After 600 hook calls it reports whether recognized calls ran the library. No operating-system worker thread is created.
+- If game.dll is not loaded when registration is refused, fallback installation is deferred until GAME_LOADED. Unsupported callsites or failed hook installation are logged and refused.
+- ABI 1, registration API, explosion capacity and editor integration are unchanged. Existing 0.1.0/0.2.0 consumers remain compatible.
+- Offline fallback policy, registration, provider and editor tests pass. In-game callback exhaustion and coexistence with other fallback hooks still need testing.
+
 # 0.2.0
 
 - Adds built-in HellForge Editor compatibility for rendering and editing custom Projectile, Damage Type and EL Explosion records in the existing Advanced categories; no editor replacement.

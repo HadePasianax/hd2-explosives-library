@@ -25,7 +25,7 @@ if($Test){
  if($LASTEXITCODE){throw 'Editor integration tests did not compile'}
  & (Join-Path $build 'test-editor.exe')
  if($LASTEXITCODE){throw 'Editor integration tests failed'}
- foreach($name in @('test-explosives-library','test-library-ops-debug','test-explosives-library-discovery')){
+ foreach($name in @('test-explosives-library','test-library-ops-debug','test-explosives-library-discovery','test-game-tick-fallback')){
   $output=Join-Path $build ($name+'.exe')
   Compile -Arguments @(('tests/'+$name+'.c'),'-o',$output)
   if($name -eq 'test-explosives-library-discovery'){

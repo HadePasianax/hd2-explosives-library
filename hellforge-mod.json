@@ -2,7 +2,7 @@
   "format": 1,
   "id": "hade.explosives-library",
   "name": "Explosives Library",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Shared private explosion registry and built-in HellForge Editor compatibility for displaying and editing custom projectile, explosion and damage-type records.",
   "icon": "icon.png",
   "gameplay": true,
