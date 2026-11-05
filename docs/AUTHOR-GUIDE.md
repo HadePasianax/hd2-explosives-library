@@ -11,7 +11,7 @@ Use globally unique names such as `yourname/yourmod/heavy_blast`. Every cooperat
 1. In `hellforge_mod_init`, register damage with `HfApi.add_damage`. Supply a native damage base (1–649), a stable name, `size`, and a scale. Register your projectile with `add_projectile`; assign its direct-hit damage separately.
 2. Subscribe to `HF_EVENT_PROJECTILES_READY`. Do not access added damage/projectile rows until that event.
 3. Use `on_game_thread` to wait for the provider. `ElFind()` returning a pointer only means the provider ABI is available, not that its engine registry is ready.
-4. Access your private damage row through `damage_row(returned_id)`. Verify its ID before editing it. Set standard/durable damage, armor penetration, demolition, stagger, push, or supported existing status fields as needed. Never substitute a shared native damage row.
+4. After row readiness, use `damage_row(returned_id)` for inspection or deliberate runtime changes, verifying its ID first. Do not wipe rows or replay damage defaults when the library becomes ready: that overwrites rebalance/editor changes. Queue standard/durable damage, penetration, demolition, stagger, push and status defaults during init instead. Never substitute a shared native damage row.
 5. Fill an `ElExplosion` and call `register_explosion` on the game thread. A zero result can mean the provider or asset package is not ready; retry with a modest delay. Inspect `status()` and provider logs if it persists.
 6. Only after receiving a nonzero explosion ID, assign it to a private projectile's `impact_explosion`. Decide separately whether `expiry_explosion` should use it or be zero. Connect that projectile to your own weapon, grenade, sentry, or stratagem delivery records.
 7. Keep every returned ID in session memory. Obtain IDs again on the next launch.
@@ -73,3 +73,14 @@ Register custom projectile/damage records during initialization so they are pres
 EL 0.3.0 requires SDK 16 while retaining gameplay ABI 1. Existing consumers using ABI 1 do not need a gameplay API migration. MPS 2.2.7 also requires SDK 16. Normal game-thread callbacks now grow dynamically; check registration failure, and do not copy the removed fallback hook.
 
 The editor catalogue is format 2: an index plus listed category files. EL builds template views in memory, adds custom objects to one listed category file and named references to the index, and serves both through intercepted reads. The original files remain unchanged. Consumer authors continue to register stable names and handle readiness as before. Live unloading is not supported by this provider.
+
+## Defaults and rebalance compatibility
+
+```c
+uint32_t damage = hf->add_damage(mod, &definition);
+if (!damage ||
+    hf_set(mod, damage, DamageInfo, standard_damage, HF_I32(800)) ||
+    hf_set(mod, damage, DamageInfo, durable_damage, HF_I32(800))) return 1;
+```
+
+Queue those fields during `hellforge_mod_init`, not from a delayed readiness tick. If a later/higher-priority patch edits the same fields, HellForge resolves precedence normally. On EL readiness only register/link the explosion. EL does not initialize consumer damage rows and cannot protect them from another mod's direct memory writes. MPS 2.2.8 fixes this mistake in its own initialization; updating the provider alone does not fix an older MPS build.

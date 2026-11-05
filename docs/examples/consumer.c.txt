@@ -11,23 +11,24 @@
 #include "explosives_library.h"
 
 static uint32_t bolt, directDamage, blastDamage, explosion;
-static int rowsReady, configured, applied, stopped, missingLogged;
+static int rowsReady, applied, stopped, missingLogged;
 static float retry;
 
-static int ConfigureDamage(const HfApi* hf)
+/* Queue defaults before rows load; readiness must not overwrite later patches. */
+static int ConfigureDamage(HfMod* mod)
 {
-    HfDamageInfo* direct = (HfDamageInfo*)hf->damage_row(directDamage);
-    HfDamageInfo* blast = (HfDamageInfo*)hf->damage_row(blastDamage);
-    if (!direct || direct->id != directDamage || !blast || blast->id != blastDamage) return 0;
-    direct->standard_damage = 125;
-    direct->durable_damage = 50;
-    blast->standard_damage = 300;
-    blast->durable_damage = 300;
-    for (unsigned i = 0; i < 4; i++) blast->armor_penetration[i] = 3;
-    blast->demolition = 20;
-    blast->stagger = 35;
-    blast->push_force = 30;
-    return 1;
+ if(hf_set(mod,directDamage,DamageInfo,standard_damage,HF_I32(125)) ||
+    hf_set(mod,directDamage,DamageInfo,durable_damage,HF_I32(50)) ||
+    hf_set(mod,blastDamage,DamageInfo,standard_damage,HF_I32(300)) ||
+    hf_set(mod,blastDamage,DamageInfo,durable_damage,HF_I32(300)) ||
+    hf_set(mod,blastDamage,DamageInfo,demolition,HF_U32(20)) ||
+    hf_set(mod,blastDamage,DamageInfo,stagger,HF_U32(35)) ||
+    hf_set(mod,blastDamage,DamageInfo,push_force,HF_U32(30))) return 0;
+ for(unsigned i=0;i<4;i++){
+  HfField field=HF_FIELD_AT(DamageInfo,armor_penetration,i);HfValue value=HF_U32(3);
+  if(HF_API(mod)->set_field(mod,blastDamage,&field,&value))return 0;
+ }
+ return 1;
 }
 
 static int Connect(HfMod* mod)
@@ -86,11 +87,6 @@ static void Tick(HfMod* mod, float dt, void* user)
         missingLogged = 1;
         return;
     }
-    if (!configured)
-    {
-        if (!ConfigureDamage(hf)) return;
-        configured = 1;
-    }
     if (!explosion)
     {
         ElExplosion definition = {
@@ -123,7 +119,7 @@ HF_MOD_EXPORT int hellforge_mod_init(const HfApi* hf, HfMod* mod)
     damage.base = 61;
     damage.name = "example/explosives_consumer/blast";
     blastDamage = hf->add_damage(mod, &damage);
-    if (!directDamage || !blastDamage) return 1;
+    if (!directDamage || !blastDamage || !ConfigureDamage(mod)) return 1;
     HfProjectile projectile = {
         .size = sizeof projectile,
         .base = HF_PROJECTILE_CB9_EXPLODING_CROSSBOW,
