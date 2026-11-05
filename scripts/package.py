@@ -5,7 +5,7 @@ OUT=ROOT/'dist';OUT.mkdir(exist_ok=True)
 
 def package(root,filename,provider=False):
     if provider:
-        paths=[root/p for p in ['hellforge-mod.json','icon.png','README.md','CHANGELOG.md','LICENSE','LIBRARY-LICENSE-MIT.txt','explosives-library.ini','HELLFORGE-PAGE.md','THIRD-PARTY-NOTICES.md']]
+        paths=[root/p for p in ['hellforge-mod.json','icon.png','README.md','CHANGELOG.md','LICENSE','LIBRARY-LICENSE-MIT.txt','explosives-library.ini','HELLFORGE-PAGE.md','THIRD-PARTY-NOTICES.md','NEXUS-PAGE.txt']]
         for directory in ['src','include','docs']:
             paths+=sorted(p for p in (root/directory).rglob('*')if p.is_file())
     else:

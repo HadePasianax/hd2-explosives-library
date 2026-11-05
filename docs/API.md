@@ -1,6 +1,6 @@
 # ABI 1 reference
 
-Include `explosives_library.h` with HellForge SDK 15 headers available. Target Windows x64, default C ABI. Use the supplied header unchanged for ABI declarations. It includes Windows/PSAPI declarations for provider discovery.
+Include `explosives_library.h` with HellForge SDK 16 headers available (provider 0.3.0 requires HellForge 0.4.0). Target Windows x64, default C ABI. Use the supplied header unchanged for ABI declarations. It includes Windows/PSAPI declarations for provider discovery.
 
 ## Discovery
 

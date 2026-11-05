@@ -1,6 +1,6 @@
 # Built-in HellForge Editor integration
 
-EL 0.2.0 works with the normal launcher-generated editor. The release does not distribute an editor replacement and removes the lab's binary-specific numeric-validation/staging probe.
+EL 0.3.0 requires HellForge 0.4.0 / SDK 16 and works with the normal launcher-generated editor. The release does not distribute an editor replacement and removes the lab's binary-specific numeric-validation/staging probe.
 
 ## Discovery and identity
 
@@ -37,3 +37,7 @@ A value reverts **after APPLY**: inspect backend refusals, radius ordering and c
 ## Reporting
 
 Include library/editor/game versions, enabled consumer mods, relevant session logs, exact input values, whether reset/reopen/restart was involved, and whether numeric IDs or registered names changed. Multiplayer and ID-reassignment persistence are unverified. Do not report private account tokens or complete account snapshots.
+
+## Catalogue format 2
+
+The format-2 index lists category files and carries shared references. EL reads templates from those listed files, augments a listed projectile part with custom entries (each keeps its actual Advanced category), and augments payload references in the index. The generated files on disk remain unchanged. Part paths must stay relative and build/schema values must match. Legacy format 1 parsing is retained for regression coverage; the release itself requires SDK 16.

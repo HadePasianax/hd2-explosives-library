@@ -8,7 +8,7 @@
 #include <map>
 #include <memory>
 #include <set>
-#include "catalog_injection.h"
+#include "split_catalog.h"
 #include "sandbox_overlay.h"
 #include "../include/explosives_editor.h"
 extern "C" const ElEditorApi* explosives_library_editor_api(uint32_t);
@@ -23,6 +23,8 @@ decltype(HfApi::set_live) originalSet;
 struct Stream {std::shared_ptr<std::string> bytes;size_t at=0;};
 std::mutex lock;
 std::map<HANDLE,Stream> streams;
+std::wstring splitPath;
+std::shared_ptr<std::string> splitBytes;
 std::vector<editorlab::Record> known;
 std::vector<editorlab::Proxy> proxies;
 std::set<std::string> readNoted;
@@ -32,10 +34,20 @@ void KeepBaseline(HfRef ref,const HfField* field,HfLiveValue* value){
  std::lock_guard<std::mutex> guard(lock);auto found=baselines.find(BaselineKey(ref,field));if(found!=baselines.end())value->base=found->second;
 }
 bool IsEditor(HfMod* mod){const char* id=host->mod_id(mod);return id&&!strcmp(id,"hellforge.editor");}
-bool Catalogue(HANDLE file){
+std::wstring FinalPath(HANDLE file){
  wchar_t path[32768];DWORD n=GetFinalPathNameByHandleW(file,path,32768,FILE_NAME_NORMALIZED);
- if(!n||n>=32768)return false;
- const wchar_t* slash=wcsrchr(path,L'\\');return !_wcsicmp(slash?slash+1:path,L"editor-catalog.json");
+ return n&&n<32768?std::wstring(path,n):std::wstring();
+}
+bool Catalogue(HANDLE file){
+ std::wstring path=FinalPath(file);const wchar_t* slash=wcsrchr(path.c_str(),L'\\');
+ return !_wcsicmp(slash?slash+1:path.c_str(),L"editor-catalog.json");
+}
+bool OriginalText(const std::wstring& path,std::string* out){
+ HANDLE file=CreateFileW(path.c_str(),GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,nullptr,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,nullptr);
+ if(file==INVALID_HANDLE_VALUE)return false;
+ LARGE_INTEGER bytes{};bool ok=originalSize(file,&bytes)&&bytes.QuadPart>0&&bytes.QuadPart<(64<<20);
+ if(ok){out->resize((size_t)bytes.QuadPart);DWORD got=0;ok=originalRead(file,&(*out)[0],(DWORD)out->size(),&got,nullptr)&&got==out->size();}
+ originalClose(file);return ok;
 }
 int SavedFile(HANDLE file){
  wchar_t path[32768];DWORD n=GetFinalPathNameByHandleW(file,path,32768,FILE_NAME_NORMALIZED);if(!n||n>=32768)return 0;
@@ -58,7 +70,15 @@ std::vector<editorlab::Record> Records(){
 BOOL WINAPI Size(HANDLE file,PLARGE_INTEGER size){
  if(!size)return originalSize(file,size);
  {std::lock_guard<std::mutex> guard(lock);auto i=streams.find(file);if(i!=streams.end()){size->QuadPart=i->second.bytes->size();return TRUE;}}
+ const std::wstring path=FinalPath(file);
+ {std::lock_guard<std::mutex> guard(lock);
+  if(splitBytes&&!path.empty()&&!_wcsicmp(path.c_str(),splitPath.c_str())){
+   LARGE_INTEGER zero{},pos{};if(!SetFilePointerEx(file,zero,&pos,FILE_CURRENT))return originalSize(file,size);
+   streams[file]={splitBytes,(size_t)pos.QuadPart};size->QuadPart=splitBytes->size();return TRUE;
+  }
+ }
  bool catalogue=Catalogue(file);int saved=catalogue?0:SavedFile(file);
+ if(catalogue){std::lock_guard<std::mutex> guard(lock);splitPath.clear();splitBytes.reset();}
  if(!catalogue&&!saved)return originalSize(file,size);
 
  LARGE_INTEGER native{},pos{},zero{};
@@ -76,12 +96,20 @@ BOOL WINAPI Size(HANDLE file,PLARGE_INTEGER size){
   size->QuadPart=bytes->size();host->log(owner,"EL INPLACE SAVED OVERLAY: %s replayed %u session change(s), disk unchanged",saved==1?"mod-stats":"Local Stats",changes);return TRUE;
  }
  auto records=Records();editorlab::Expanded info;std::string why,expanded;
- if(!editorlab::Expand(input,records,&expanded,&info,&why)){
+ hfjson::Value layout;bool parsed=hfjson::Parse(input,&layout,&why);
+ editorlab::SplitExpanded split;
+ bool splitLayout=parsed&&layout.Find("files",hfjson::Value::Array);
+ std::wstring folder=path.substr(0,path.find_last_of(L"\\/"));
+ auto readPart=[&](const std::string& name,std::string* text){return OriginalText(folder+L"\\"+hfjson::Wide(name),text);};
+ bool okExpanded=splitLayout?editorlab::ExpandSplit(input,records,readPart,&expanded,&split,&info,&why):editorlab::Expand(input,records,&expanded,&info,&why);
+ if(!okExpanded){
   host->log(owner,"EL INPLACE CATALOG REFUSED: %s; default file passed through",why.c_str());return originalSize(file,size);
  }
  if(!info.projectiles&&!info.damage){host->log(owner,"EL INPLACE CATALOG: intercepted but no custom records registered yet; default file passed through");return originalSize(file,size);}
  auto bytes=std::make_shared<std::string>(std::move(expanded));
- {std::lock_guard<std::mutex> guard(lock);streams[file]={bytes,(size_t)pos.QuadPart};known=records;proxies=info.proxies;}
+ {std::lock_guard<std::mutex> guard(lock);streams[file]={bytes,(size_t)pos.QuadPart};known=records;proxies=info.proxies;
+  if(splitLayout){splitPath=folder+L"\\"+hfjson::Wide(split.partName);splitBytes=std::make_shared<std::string>(std::move(split.partText));}
+  else{splitPath.clear();splitBytes.reset();}}
  size->QuadPart=bytes->size();
  host->log(owner,"EL INPLACE CATALOG: injected %u projectile, %u damage and %u runtime impact-explosion entries; disk unchanged",info.projectiles,info.damage,info.explosions);
  return TRUE;
@@ -218,6 +246,6 @@ extern "C" int ElInplaceInit(const HfApi* api,HfMod* mod){
     api->hook(mod,(uintptr_t)GetProcAddress(kernel,"GetFileSizeEx"),(void*)Size,(void**)&originalSize)){
   api->log(mod,"EL INPLACE DISABLED: a required hook was refused; inspect mod log");return 0;
  }
- api->log(mod,"EL INPLACE ARMED: default editor DLL unchanged; waiting for editor-catalog.json read. No interception log means editor initialized too early.");
+ api->log(mod,"EL INPLACE ARMED: default editor DLL unchanged; waiting for editor catalogue index/parts. No interception log means editor initialized too early.");
  return 1;
 }

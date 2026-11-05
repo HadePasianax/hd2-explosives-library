@@ -1,12 +1,12 @@
 # Explosives Library
 
-**0.2.1 · Gameplay API ABI 1 · HellForge SDK 15 · game build 25480438 · Windows x64**
+**0.3.0 | Gameplay API ABI 1 | HellForge 0.4.0 / SDK 16 | game build 25480438 | Windows x64**
 
 Explosives Library provides shared private explosion definitions for HellForge mods. Version 0.2.0 also adds compatibility with the **built-in HellForge Editor**, allowing custom **Explosion, Projectile and Damage Type IDs** to be displayed and their supported fields edited in the existing Advanced categories. No replacement editor is required.
 
 ## Install and use
 
-1. Download [Explosives Library 0.2.1](downloads/explosives-library-0.2.1.zip), import it into HellForge, and enable it instead of an older release or editor lab. Keep one EL provider enabled.
+1. Download [Explosives Library 0.3.0](downloads/explosives-library-0.3.0.zip), import it into HellForge, and enable it instead of an older release or editor lab. Keep one EL provider enabled.
 2. Enable a compatible consumer, such as More Plasma Stratagems. The library alone adds no weapons or stratagems. Other mods' HellForge-registered custom projectiles/damage can also appear without using EL for explosions.
 3. Keep the provider before the built-in editor where load order is configurable, then fully restart the game. Consumers must implement readiness retries; loading EL first is not a substitute for that.
 4. Open F8 > ADVANCED > **Projectiles**, **Damage Types** or **Explosions**. Search the registered namespace/source name, such as `hade/plas/mortar_max_shell`.
@@ -63,6 +63,14 @@ Use `powershell -File scripts/build.ps1 -Zig C:/path/to/zig.exe -Test`; output/c
 
 The combined 0.2.0 integration is distributed under **GPL-3.0**, because it incorporates HellForge's JSON implementation. The original library's permissive notice is retained in `LIBRARY-LICENSE-MIT.txt`; SDK headers retain their separate licence. See [third-party notices](THIRD-PARTY-NOTICES.md).
 
-## Callback-slot exhaustion (0.2.1)
+## HellForge 0.4.0 and downloads
 
-The library requests HellForge's normal game-thread callback first. If refused, it uses a validated shared hook on the same game update function, following Armor Transmog 0.1.70's implementation. The secondary caller is accepted only after 250 ms without the primary caller. No extra operating-system thread is created. Check the mod log and modloader.log for registration, callsite or hook failures; recognized hook activity is summarized after 600 calls. The fallback is specific to supported game build 25480438 and has not yet been tested in game with exhausted slots. Consumer mods need their own callback failure handling; this does not provide a fallback for another mod's callbacks.
+Requires HellForge 0.4.0 beta or newer exposing SDK 16. The gameplay API is still ABI 1, so existing ABI 1 consumers continue to work. The library supports the new split built-in editor catalogue and retains its legacy catalogue parser for regression coverage. Injection remains in memory; the generated editor files and editor DLL are not replaced.
+
+Install the release ZIP through HellForge's Add mods/import control, enable one provider and restart. The same ZIP is used on [Nexus Mods](https://www.nexusmods.com/helldivers2/mods/18533), [GitHub Releases](https://github.com/HadePasianax/hd2-explosives-library/releases), and HellForge. It is a HellForge mod package; install it through HellForge rather than a vanilla-game mod manager.
+
+## Game-thread callbacks
+
+The fixed 16-slot callback pool is gone in HellForge 0.4.0. EL uses the normal dynamically growing callback list and refuses initialization if registration fails. The former shared-hook fallback and caller stack scanning have been removed. Consumer mods still need to check their own registration results. No worker thread is created.
+
+Live unloading remains unsupported. Restart after changing the provider or consumers. Current offline tests verify split-file injection, names, edit/reset behavior and registry operation; real in-game HellForge 0.4.0 testing is pending.

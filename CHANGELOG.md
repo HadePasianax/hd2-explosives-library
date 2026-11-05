@@ -1,3 +1,12 @@
+## 0.3.0
+
+- Requires HellForge 0.4.0 beta or newer with mod SDK 16; older loaders are refused.
+- Updated built-in editor integration for catalogue format 2: the index and its category files are read without replacing the editor or writing its catalogue to disk. Custom projectile, damage and explosion pages and named payload references remain available.
+- Removed the callback-slot fallback and its game hook/stack scanner. Both EL and updated MPS use HellForge's dynamically growing callback list and report normal registration failures.
+- Gameplay ABI remains 1; existing ABI 1 consumers remain compatible. Private explosion capacity remains 64. This release does not add live unloading support.
+- Added the Nexus distribution page: https://www.nexusmods.com/helldivers2/mods/18533
+- Offline editor, split catalogue, registry, provider and discovery checks pass. In-game validation on HellForge 0.4.0 remains required.
+
 ## 0.2.1
 
 - Added a callback-slot fallback adapted from Beelzebub's Armor Transmog 0.1.70. EL still requests a normal HellForge game-thread callback first. If registration is refused, it validates the supported game build's callsite and joins HellForge's shared hook chain for game.dll+0x13270B0.

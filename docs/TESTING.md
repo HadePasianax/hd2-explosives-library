@@ -49,3 +49,7 @@ Only game build 25480438 is supported. Multiplayer, broad donor coverage, and mu
 ## 0.2.1 callback fallback
 
 Offline tests cover normal callback preference, delayed game.dll arrival, invalid callsite refusal, shared-hook registration success/failure, primary-caller preference, the strictly-greater-than-250 ms secondary threshold, and forwarding the original function. The policy test substitutes synthetic caller addresses; it does not reproduce a real HellForge hook chain's stack. In-game tests are still required with 16 occupied callback slots, only the secondary caller active, multiple fallback mods, and both editor and gameplay consumers.
+
+## 0.3.0 / SDK 16 coverage
+
+The format-2 fixture splits native projectile, damage and explosion templates into separate listed files. Tests read the index and each category through the actual file-interception adapter, exercise partial reads and handle cleanup, and verify custom objects and named payload references with byte-identical original files. Invalid relative paths and build/schema mismatches are rejected. Existing edit/reset, registry capacity, donor isolation and discovery tests remain. Callback fallback tests were removed with that code. Runtime HellForge 0.4.0 and multiplayer remain unverified.

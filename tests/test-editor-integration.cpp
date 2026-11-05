@@ -84,5 +84,45 @@ int main(){
  assert(editorlab::ReplayJournal(stale,journal,true,&merged,&replayed)&&replayed==1);assert(hfjson::Parse(merged,&restored,&why)&&!restored.Find("mod:test")&&restored.Find("weapons"));
  assert(editorlab::ReplayJournal(merged,journal,true,&other,&replayed)&&replayed==0);
  puts("PASS sandbox reopen regression: reset removals survive stale saved-file reload; ordinary and custom stats remain isolated.");
+
+ // SDK 16 / catalogue format 2: native loader reads only listed category parts.
+ const std::wstring splitFolder=L"build/split-editor-test";CreateDirectoryW(splitFolder.c_str(),nullptr);
+ hfjson::Value index;assert(hfjson::Parse(before,&index,&why));
+ const auto sourceObjects=index.Find("objects")->items;
+ index.Erase("objects");index.At("format")=hfjson::Value::MakeNumber(2,true);
+ index.At("files").kind=hfjson::Value::Array;
+ std::map<std::string,std::string> parts;
+ for(const std::string category:{"projectiles","damage","explosions"}){
+  std::string name=category+".json";index.At("files").items.push_back(hfjson::Value::MakeString(name));
+  hfjson::Value part;part.kind=hfjson::Value::Object;part.At("format")=hfjson::Value::MakeNumber(2,true);
+  part.At("build")=index.At("build");part.At("schema")=index.At("schema");part.At("objects").kind=hfjson::Value::Array;
+  for(const auto& object:sourceObjects)if(object.GetString("category")==category)part.At("objects").items.push_back(object);
+  parts[name]=hfjson::Write(part);assert(hfjson::WriteAtomically(splitFolder+L"/"+hfjson::Wide(name),parts[name]));
+ }
+ const std::string rawIndex=hfjson::Write(index);assert(hfjson::WriteAtomically(splitFolder+L"/editor-catalog.json",rawIndex));
+ auto virtualRead=[&](const std::wstring& name){
+  HANDLE f=CreateFileW((splitFolder+L"/"+name).c_str(),GENERIC_READ,FILE_SHARE_READ,nullptr,OPEN_EXISTING,0,nullptr);assert(f!=INVALID_HANDLE_VALUE);
+  LARGE_INTEGER n;assert(Size(f,&n));std::string result((size_t)n.QuadPart,'\0');DWORD got=0;
+  const DWORD first=(DWORD)result.size()/2;assert(Read(f,&result[0],first,&got,nullptr)&&got==first);
+  assert(Read(f,&result[first],(DWORD)result.size()-first,&got,nullptr)&&got==result.size()-first);assert(Close(f));return result;
+ };
+ std::string newIndex=virtualRead(L"editor-catalog.json");hfjson::Value parsedIndex;assert(hfjson::Parse(newIndex,&parsedIndex,&why));
+ assert(parsedIndex.GetNumber("format")==2&&!parsedIndex.Find("objects")&&parsedIndex.Find("files")->items.size()==3);
+ unsigned custom=0;
+ for(const auto& f:parsedIndex.Find("files")->items){
+  const std::string part=virtualRead(hfjson::Wide(f.Str()));hfjson::Value parsed;assert(hfjson::Parse(part,&parsed,&why)&&parsed.GetNumber("format")==2);
+  for(const auto& o:parsed.Find("objects")->items)if(o.GetString("id").rfind("editor-lab/",0)==0)custom++;
+  std::string disk;assert(hfjson::ReadFile(splitFolder+L"/"+hfjson::Wide(f.Str()),&disk)&&disk==parts[f.Str()]);
+ }
+ assert(custom==3&&proxies.size()==1);bool label=false;
+ for(const auto& ref:parsedIndex.Find("references")->Find("explosion")->items)if(ref.GetString("label")=="fixture/private_shot")label=true;
+ assert(label);std::string diskIndex;assert(hfjson::ReadFile(splitFolder+L"/editor-catalog.json",&diskIndex)&&diskIndex==rawIndex);
+ editorlab::SplitExpanded splitOutput;editorlab::Expanded splitInfo;std::string ignored;
+ auto read=[&](const std::string& name,std::string* value){auto i=parts.find(name);if(i==parts.end())return false;*value=i->second;return true;};
+ hfjson::Value invalid=index;invalid.At("files").items[0]=hfjson::Value::MakeString("../outside.json");
+ assert(!editorlab::ExpandSplit(hfjson::Write(invalid),Records(),read,&ignored,&splitOutput,&splitInfo,&why));
+ auto bad=parts;hfjson::Value mismatch;assert(hfjson::Parse(parts["damage.json"],&mismatch,&why));mismatch.At("schema")=hfjson::Value::MakeString("wrong");parts["damage.json"]=hfjson::Write(mismatch);
+ assert(!editorlab::ExpandSplit(rawIndex,Records(),read,&ignored,&splitOutput,&splitInfo,&why));parts=bad;
+ puts("PASS SDK 16 split catalogue: index references and custom projectile/damage/blast pages injected through listed parts, partial reads, native files unchanged, traversal/schema mismatch rejected.");
  puts("PASS default-editor lab: real catalogue augmented in memory, partial reads, handle cleanup, custom ID edit routing, late explosion resolution/reset, other-mod pass-through and byte-identical catalogue on disk.");
 }

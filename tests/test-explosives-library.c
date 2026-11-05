@@ -12,7 +12,8 @@ static int Write(uintptr_t at,const void* in,size_t n){writes++;memcpy((void*)at
 static void Log(HfMod* m,const char* f,...){}
 static uintptr_t DamageRow(uint32_t id){return id==650?(uintptr_t)&damage:0;}
 int main(void){
- testApi=(HfApi){.size=sizeof testApi,.version=15,.read=Read,.read_code=Read,.write=Write,.log=Log,.damage_row=DamageRow};const HfApi* a=&testApi;HfMod* mod=(void*)&a;
+ HfApi old={.version=15};assert(hellforge_mod_init(&old,NULL)==1);
+ testApi=(HfApi){.size=sizeof testApi,.version=16,.read=Read,.read_code=Read,.write=Write,.log=Log,.damage_row=DamageRow};const HfApi* a=&testApi;HfMod* mod=(void*)&a;
  gameBase=(uintptr_t)VirtualAlloc(NULL,IMAGE_SIZE,MEM_RESERVE|MEM_COMMIT,PAGE_READWRITE);assert(gameBase);
  uintptr_t pointers[423];for(unsigned i=0;i<423;i++){memcpy(&nativeRows[i],&i,4);pointers[i]=(uintptr_t)&nativeRows[i];}
  nativeRows[407].damage=61;nativeRows[407].inner_radius=3;nativeRows[407].outer_radius=4;nativeRows[407].shockwave_radius=5;

@@ -36,7 +36,7 @@ Use a [versioned release](https://github.com/HadePasianax/hd2-explosives-library
 
 ## Compatibility and current status
 
-**Version 0.2.0. Requires HellForge SDK 15 support and game build 25480438.** Game updates may require a library update.
+**Version 0.3.0. Requires HellForge 0.4.0 beta or newer, SDK 16 support and game build 25480438.** Game updates may require a library update.
 
 Private explosion and damage behavior has been tested through grenade and Crossbow overwrites in the precursor lab, followed by a library-backed orbital strike test with logged nearby explosion damage. Custom-record rendering and editing have also worked in user testing with other mods. Multiplayer compatibility, persistence after numeric IDs are reassigned, and every startup configuration have not been validated. The new named payload references have passed offline tests but still need in-game confirmation.
 
@@ -52,11 +52,8 @@ The **OPS Debug** mod on GitHub is a separate test download to show the library 
 
 GPT-6.1 Sol assisted with research, implementation, debugging and documentation of this tool.
 
-## 0.2.1 patch notes
+## Current release: 0.3.0
 
-- Added a callback-slot fallback adapted from Beelzebub's Armor Transmog 0.1.70. EL still requests a normal HellForge game-thread callback first. If registration is refused, it validates the supported game build's callsite and joins HellForge's shared hook chain for game.dll+0x13270B0.
-- The fallback recognizes the frame caller through the stack; the secondary caller is used only after 250 ms without the primary caller. After 600 hook calls it reports whether recognized calls ran the library. No operating-system worker thread is created.
-- If game.dll is not loaded when registration is refused, fallback installation is deferred until GAME_LOADED. Unsupported callsites or failed hook installation are logged and refused.
-- ABI 1, registration API, explosion capacity and editor integration are unchanged. Existing 0.1.0/0.2.0 consumers remain compatible.
-- Offline fallback policy, registration, provider and editor tests pass. In-game callback exhaustion and coexistence with other fallback hooks still need testing.
+Requires **HellForge 0.4.0 beta or newer / SDK 16**. Updated for the built-in editor's split catalogue. Removed the game-thread callback fallback because HellForge now grows its callback list dynamically. Gameplay API remains ABI 1 and private explosion capacity remains 64. Restart after changing library or consumers; live unloading is unsupported. Offline tests pass; in-game confirmation on 0.4.0 is pending.
 
+Also available on [Nexus Mods](https://www.nexusmods.com/helldivers2/mods/18533). Import the ZIP through HellForge.

@@ -1,0 +1,19 @@
+[b]Explosives Library 0.3.0[/b]
+
+A shared private explosion registry for HellForge mods, plus built-in editor support for custom projectile, explosion and damage records. The library alone adds no weapons or stratagems.
+
+[b]Requirements[/b]
+HellForge 0.4.0 beta or newer (SDK 16). A consumer mod is needed to use its gameplay features.
+
+[b]Installation[/b]
+Download the main ZIP. Use HellForge's Add mods/import control, enable it, keep one library provider active and restart the game. Install consumer mods separately. This package is installed through HellForge.
+
+[b]0.3.0 changes[/b]
+Supports HellForge 0.4.0's split editor catalogue. Removes the old callback-slot fallback; uses HellForge's normal dynamically growing callback list. Gameplay ABI remains 1, preserving existing consumer compatibility. No new effects/audio or status effects are added; native donors supply presentation. Private explosion capacity remains 64.
+
+[b]Limitations[/b]
+Game-build-specific (25480438). Live unloading is unsupported. Restart after changing mods. Offline tests pass; real HellForge 0.4.0 and multiplayer validation remain pending.
+
+[b]Authors[/b]
+Source, API, guide and examples: https://github.com/HadePasianax/hd2-explosives-library
+Report issues: https://github.com/HadePasianax/hd2-explosives-library/issues

@@ -1,4 +1,3 @@
-#include "game_tick_fallback.h"
 /* Experimental shared registry, supported game build 25480438 only. */
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -72,8 +71,9 @@ static void Tick(HfMod* mod,float dt,void* user){
 }
 extern int ElInplaceInit(const HfApi*,HfMod*);
 HF_MOD_EXPORT int hellforge_mod_init(const HfApi* hf,HfMod* mod){
- if(hf->version<15||strcmp(hf->build_id(),"25480438"))return 1;
+ if(hf->version<16||strcmp(hf->build_id(),"25480438"))return 1;
  owner=mod;api=hf;ElInplaceInit(hf,mod);hf->on(mod,HF_EVENT_PROJECTILES_READY,Ready,NULL);
- hf->log(mod,"Explosives Library 0.2.1 ABI 1 + stock editor integration; restart between changes; 64 private explosion slots");
- return !HadeGameTickRegister(hf,mod,Tick,NULL);
+ hf->log(mod,"Explosives Library 0.3.0 ABI 1 + stock editor integration; restart between changes; 64 private explosion slots");
+ if(!hf->on_game_thread(mod,Tick,NULL)){hf->log(mod,"EL DISABLED: normal game-thread callback registration failed; see modloader.log");return 1;}
+ return 0;
 }
